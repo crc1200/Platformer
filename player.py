@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.import_character_assets()
         self.frame_index = 0
         self.animation_speed = 0.07
-        self.image = self.animations['wolfIdle'][self.frame_index]
+        self.image = self.animations['germanRunning'][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
         self.size = self.image.get_size()
@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = -16
 
         # player status
-        self.status = 'wolfIdle'
+        self.status = 'germanRunning'
         self.facing_right = True
         self.on_ground = False
         self.on_ceiling = False
@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
     def import_character_assets(self):
         character_path = './graphics/character/'
         #self.animations = {'wolfIdle': [], 'wolfRun': [], 'jump': [], 'fall': [], 'duck': []}
-        self.animations = {'wolfIdle': [], 'wolfRun': [], 'wolfJump': [], 'duck': []}
+        self.animations = {'germanIdle': [], 'germanRunning': [],'duck': []}
 
         for animation in self.animations.keys():
             full_path = character_path + animation
@@ -72,14 +72,14 @@ class Player(pygame.sprite.Sprite):
 
     def get_status(self):
         if self.direction.y < 0:
-            self.status = 'wolfJump'
+            self.status = 'germanRunning'
         elif self.direction.y > 1:
-            self.status = 'wolfJump'
+            self.status = 'germanRunning'
         else:
             if self.direction.x != 0:
-                self.status = 'wolfRun'
+                self.status = 'germanRunning'
             else:
-                self.status = 'wolfIdle'
+                self.status = 'germanRunning'
         if self.flying:
             self.status = 'duck'
 
@@ -94,9 +94,9 @@ class Player(pygame.sprite.Sprite):
         image = animation[int(self.frame_index)]
 
         if self.flying:
-            image = pygame.transform.scale(image, (int(self.size[0]*1.25), int(self.size[1]*1.25)))
+            image = pygame.transform.scale(image, (int(self.size[0]*.75), int(self.size[1]*.88)))
         else:
-            image = pygame.transform.scale(image, (int(self.size[0]*2), int(self.size[1]*2)))
+            image = pygame.transform.scale(image, (int(self.size[0]*1.2), int(self.size[1]*1.2)))
         if not self.facing_right:
             self.image = image
         else:

@@ -13,7 +13,7 @@ class Level:
         # level setup
         self.display_surface = surface
         self.setup_level(level_data)
-        self.world_shift = 0
+        self.world_shift = -4
         self.current_x = 0
         self.bg_img = 'assets/trees.png'
 
@@ -56,13 +56,13 @@ class Level:
         direction_x = player.direction.x
 
         if player_x < screen_width / 4 and direction_x < 0:
-            self.world_shift = 8
+            self.world_shift = -4
             player.speed = 0
-        elif player_x > screen_width - (screen_width / 4) and direction_x > 0:
-            self.world_shift = -8
+        if player_x > screen_width - (screen_width / 4) and direction_x > 0:
+            self.world_shift = -4
             player.speed = 0
         else:
-            self.world_shift = 0
+            self.world_shift = -4
             player.speed = 8
 
     def horizontal_movement_collision(self):
@@ -71,11 +71,11 @@ class Level:
 
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
-                if player.direction.x < 0:
+                if not self.player.sprite.facing_right:
                     player.rect.left = sprite.rect.right
                     player.on_left = True
                     self.current_x = player.rect.left
-                elif player.direction.x > 0:
+                elif self.player.sprite.facing_right:
                     player.rect.right = sprite.rect.left
                     player.on_right = True
                     self.current_x = player.rect.right
@@ -165,9 +165,6 @@ class Level:
 
 
     def run(self):
-        # # dust particles
-        # self.dust_sprite.update(self.world_shift)
-        # self.dust_sprite.draw(self.display_surface)
 
         # level tiles
         self.tiles.update(self.world_shift)
