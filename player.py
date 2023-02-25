@@ -100,6 +100,7 @@ class Player(pygame.sprite.Sprite):
         if not self.facing_right:
             self.image = image
         else:
+            self.animation_speed = .1
             flipped_image = pygame.transform.flip(image, True, False)
             self.image = flipped_image
 
