@@ -32,12 +32,11 @@ class Player(pygame.sprite.Sprite):
         self.on_right = False
         
         # transformation 
-        self.transform = False
         self.transform_cool_down = 100
         self.transform_time = 0
         
         # dog dash 
-        self.dash_cool_down = 500
+        self.dash_cool_down = 800
         self.dash_time = 0
 
         # flying
@@ -74,9 +73,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.x = 0
 
         if keys[pygame.K_RETURN]:
-            self.flying = True
-        if keys[pygame.K_TAB]:
-            self.flying = False
+            self.transform()
 
         if keys[pygame.K_SPACE] and self.on_ground or keys[pygame.K_SPACE] and self.flying:
             self.jump()
@@ -146,6 +143,11 @@ class Player(pygame.sprite.Sprite):
         if pygame.time.get_ticks() - self.dash_time >= self.dash_cool_down:     
                 self.direction.x += 10           
                 self.dash_time = pygame.time.get_ticks()
+
+    def transform(self):
+        if pygame.time.get_ticks() - self.transform_time >= self.transform_cool_down:     
+                self.flying = not self.flying          
+                self.transform_time = pygame.time.get_ticks()
         
 
     # def color_change(self):

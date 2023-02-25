@@ -76,8 +76,9 @@ class Level:
             player.speed = 8
             
     def increase_speed(self):
-        self.world_shift = -(pygame.time.get_ticks()**(1/7))
-        self.score = int((pygame.time.get_ticks()/1000) + 2**(pygame.time.get_ticks()/10000)) 
+        if pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
+            self.world_shift = -(pygame.time.get_ticks()**(1/7))
+            self.score = int((pygame.time.get_ticks()/1000) + 2**(pygame.time.get_ticks()/10000)) 
         
     def horizontal_movement_collision(self):
         player = self.player.sprite
@@ -184,6 +185,11 @@ class Level:
                 print(self.lives)
                 self.lives -= 1
                 self.world_shift = 0
+                player.rect.x = screen_width / 4
+                player.rect.y = screen_width / 4
+                
+                flipped_image = pygame.transform.flip(player.image, True, False)
+                player.image = flipped_image
             else:
                 print("GAME OVER")
             self.death_time = pygame.time.get_ticks()

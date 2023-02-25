@@ -14,8 +14,10 @@ i = 0
 
 my_font = pygame.font.SysFont('assets/pixeboy-font/Pixeboy-z8XGD.ttf', 80)
 
+heart = pygame.image.load("assets/heart.png").convert_alpha()
+
 while True:
-    text_surface = my_font.render(str(level.score), False, 'white')
+    text_surface = my_font.render(str(level.score), False, 'black')
     bg_img = pygame.image.load(level.bg_img)
     bg_img = pygame.transform.scale(bg_img,(screen_width,screen_height))
     screen.fill((0,0,0))
@@ -26,13 +28,17 @@ while True:
         i=0
     i-=1
     
-    
-    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
     level.run()
     screen.blit(text_surface, (50,30))
+    
+    lastPosition = 0
+    for i in range(level.lives):
+        screen.blit(heart, (20 + lastPosition, 100))
+        lastPosition += 40
+        
     pygame.display.update()
     clock.tick(60)
