@@ -138,6 +138,14 @@ class Player(pygame.sprite.Sprite):
         self.on_left = False
         self.on_right = False
 
+        # flying
+        self.flying = False
+        # self.flying_time = None
+        # self.flying = False
+        self.flying_speed = -7
+        self.flying_gravity = 0.5
+        # self.flap_cooldown = 800
+
     def get_input(self):
         keys = pygame.key.get_pressed()
 
@@ -150,7 +158,13 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
-        if keys[pygame.K_SPACE] and self.on_ground:
+        if keys[pygame.K_RETURN]:
+            self.flying = True
+        if keys[pygame.K_TAB]:
+            self.flying = False
+
+
+        if keys[pygame.K_SPACE] and self.on_ground or keys[pygame.K_SPACE] and self.flying:
             self.jump()
             # self.create_jump_particles(self.rect.midbottom)
 
@@ -165,14 +179,35 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.status = 'idle'
 
+    # def apply_gravity(self):
+    #     self.direction.y += self.gravity
+    #     self.rect.y += self.direction.y
+    #
+    # def jump(self):
+    #     self.direction.y = self.jump_speed
+
     def apply_gravity(self):
-        self.direction.y += self.gravity
+        if self.flying:
+            self.direction.y += self.flying_gravity
+        else:
+            self.direction.y += self.gravity
         self.rect.y += self.direction.y
 
     def jump(self):
-        self.direction.y = self.jump_speed
+        if self.flying:
+            self.direction.y = self.flying_speed
+        else:
+            self.direction.y = self.jump_speed
+    #
+
+    def color_change(self):
+        if self.flying:
+            self.image.fill('blue')
+        else:
+            self.image.fill('red')
 
     def update(self):
+        self.color_change()
         self.get_input()
         self.get_status()
         # self.animate()
