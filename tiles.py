@@ -11,10 +11,10 @@ class Tile(pygame.sprite.Sprite):
 		self.rect.x += x_shift
   
 class Gate(pygame.sprite.Sprite):
-    def __init__(self, pos, size):
+    def __init__(self, pos, width, height):
         super().__init__()
-        self.image = pygame.Surface((size, size))
-        self.image.fill('blue')
+        self.image = pygame.Surface((width, height))
+        # self.image.fill('clear')
         self.rect = self.image.get_rect(topleft=pos)
     def update(self, x_shift):
       self.rect.x += x_shift

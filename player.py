@@ -137,6 +137,11 @@ class Player(pygame.sprite.Sprite):
         self.on_ceiling = False
         self.on_left = False
         self.on_right = False
+        
+        # transformation 
+        self.transform = False
+        self.transform_cool_down = 100
+        self.transform_time = 0
 
         # flying
         self.flying = False
@@ -163,7 +168,6 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_TAB]:
             self.flying = False
 
-
         if keys[pygame.K_SPACE] and self.on_ground or keys[pygame.K_SPACE] and self.flying:
             self.jump()
             # self.create_jump_particles(self.rect.midbottom)
@@ -178,6 +182,11 @@ class Player(pygame.sprite.Sprite):
                 self.status = 'run'
             else:
                 self.status = 'idle'
+    
+    def transition(self):
+        while self.rect.y >= 0:
+            self.rect.y -= 10
+            
 
     # def apply_gravity(self):
     #     self.direction.y += self.gravity
@@ -205,6 +214,8 @@ class Player(pygame.sprite.Sprite):
             self.image.fill('blue')
         else:
             self.image.fill('red')
+            
+    
 
     def update(self):
         self.color_change()
