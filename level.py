@@ -109,8 +109,10 @@ class Level:
                     # player.gravity = 0.2
                     #
                     # self.fade(screen_width, screen_width)
+                    self.add_obstacles()
                 
                 player.transform_time = pygame.time.get_ticks()
+
                 
 
         if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
@@ -120,11 +122,17 @@ class Level:
 
     def add_obstacles(self):
         
-        print(randint(1, 11))
-        print(randint(1, 5))
+        numRows = randint(3, 6)
         
-        tile = Tile((screen_width, 100), tile_size)
-        self.tiles.add(tile)
+        
+        print(screen_width / 11)
+        
+        for j in range(numRows):
+            x = randint(1, 11)
+            y = randint(3, 5)
+            for i in range(y):
+                tile = Tile((screen_width + (i * tile_size), x * tile_size), tile_size)
+                self.tiles.add(tile)
 
     def vertical_movement_collision(self):
         player = self.player.sprite
