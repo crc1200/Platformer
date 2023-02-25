@@ -69,7 +69,6 @@ class Level:
         player = self.player.sprite
         player.rect.x += player.direction.x * player.speed
 
-        
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.x < 0:
@@ -100,6 +99,15 @@ class Level:
                     # player.speed = -7
                     # player.gravity = 0.2
                     
+                    # self.fade(screen_width, screen_width)
+                    # player.direction.y = -14
+                    #
+                    # player.flying_speed = -7
+                    # player.flying_gravity = 0.2
+                    #
+                    # player.speed = -7
+                    # player.gravity = 0.2
+                    #
                     # self.fade(screen_width, screen_width)
                 
                 player.transform_time = pygame.time.get_ticks()
