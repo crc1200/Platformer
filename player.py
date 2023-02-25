@@ -20,7 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 8
         self.gravity = 0.8
-        self.jump_speed = -16
+        self.jump_speed = -18
 
         # player status
         self.status = 'germanRunning'
@@ -34,6 +34,10 @@ class Player(pygame.sprite.Sprite):
         self.transform = False
         self.transform_cool_down = 100
         self.transform_time = 0
+        
+        # dog dash 
+        self.dash_cool_down = 500
+        self.dash_time = 0
 
         # flying
         self.flying = False
@@ -134,7 +138,10 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.y = self.jump_speed
     def dash(self):
-        self.direction.x += 0.2
+        if pygame.time.get_ticks() - self.dash_time >= self.dash_cool_down:     
+                self.direction.x += 10           
+                self.dash_time = pygame.time.get_ticks()
+        
 
     # def color_change(self):
     #     if self.flying:

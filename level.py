@@ -13,12 +13,15 @@ class Level:
         self.level_data = level_data
         self.display_surface = surface
         self.setup_level(level_data)
-        self.world_shift = -4
+        self.world_shift = 0
         self.current_x = 0
         self.bg_img = 'assets/trees.png'
         
         self.obstacle_cool_down = 300
         self.obstacle_time = 0
+        
+        self.world_shift_cool_down = 300
+        self.world_shift_time = 0
 
         # dust
         self.dust_sprite = pygame.sprite.GroupSingle()
@@ -59,21 +62,21 @@ class Level:
         direction_x = player.direction.x            
             
         if player_x < screen_width / 4 and direction_x < 0:
-            self.world_shift = -4
             player.speed = 0
         if player_x > screen_width - (screen_width / 6) and direction_x > 0:
-            self.world_shift = -4
             player.speed = 0
         else:
-            self.world_shift = -4
             player.speed = 8
-
+            
+    def increase_speed(self):
+        self.world_shift = -(pygame.time.get_ticks()**(1/7))
+        
     def horizontal_movement_collision(self):
         player = self.player.sprite
         if player.flying:
             player.rect.x += player.direction.x * (player.speed * 0.5)
         else:
-            player.rect.x += player.direction.x * (player.speed)
+            player.rect.x += player.direction.x * (player.speed * 1.3)
 
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
@@ -94,24 +97,6 @@ class Level:
                         self.bg_img = 'assets/trees.png'
                     else:
                         self.bg_img = 'assets/mountains.png';                
-                    # player.direction.y = -14
-                    
-                    # player.flying_speed = -7
-                    # player.flying_gravity = 0.2
-                    
-                    # player.speed = -7
-                    # player.gravity = 0.2
-                    
-                    # self.fade(screen_width, screen_width)
-                    # player.direction.y = -14
-                    #
-                    # player.flying_speed = -7
-                    # player.flying_gravity = 0.2
-                    #
-                    # player.speed = -7
-                    # player.gravity = 0.2
-                    #
-                    # self.fade(screen_width, screen_width)
                 
                 player.transform_time = pygame.time.get_ticks()
 
@@ -188,6 +173,7 @@ class Level:
 
         # level tiles
         self.add_obstacles()
+        self.increase_speed()
         
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
