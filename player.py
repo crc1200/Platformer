@@ -52,12 +52,15 @@ class Player(pygame.sprite.Sprite):
     def get_input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT]: 
             self.direction.x = 1
             self.facing_right = True
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
             self.facing_right = False
+        elif keys[pygame.K_LSHIFT]:
+            if not self.flying:
+                self.dash()
         else:
             self.direction.x = 0
 
@@ -130,6 +133,8 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = self.flying_speed
         else:
             self.direction.y = self.jump_speed
+    def dash(self):
+        self.direction.x += 0.2
 
     # def color_change(self):
     #     if self.flying:
