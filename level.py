@@ -1,5 +1,5 @@
 import pygame
-from tiles import Tile
+from tiles import *
 from settings import tile_size, screen_width
 from player import Player
 
@@ -24,6 +24,10 @@ class Level:
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
+        
+        # create a group of "gates"
+        self.gates = pygame.sprite.Group()
+        
         self.player = pygame.sprite.GroupSingle()
 
         for row_index, row in enumerate(layout):
@@ -37,6 +41,9 @@ class Level:
                 if cell == 'P':
                     player_sprite = Player((x, y), self.display_surface)
                     self.player.add(player_sprite)
+                if cell == 'T':
+                    tile = Gate((x, y), tile_size)
+                    self.gates.add(tile)
 
     def scroll_x(self):
         player = self.player.sprite
@@ -67,6 +74,12 @@ class Level:
                     player.rect.right = sprite.rect.left
                     player.on_right = True
                     self.current_x = player.rect.right
+        
+        for sprite in self.gates.sprites():
+            if sprite.rect.colliderect(player.rect):
+                if sprite.rect.right < player.rect.right:
+                    player.flying = not player.flying
+                
 
         if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
             player.on_left = False
@@ -102,6 +115,10 @@ class Level:
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
         self.scroll_x()
+        
+        # gate tiles
+        self.gates.update(self.world_shift)
+        self.gates.draw(self.display_surface)
 
         # player
         self.player.update()
