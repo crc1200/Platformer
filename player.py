@@ -1,5 +1,6 @@
 import pygame
 from support import import_folder
+from level import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, surface):
@@ -43,6 +44,10 @@ class Player(pygame.sprite.Sprite):
         self.flying = False
         self.flying_speed = -7
         self.flying_gravity = 0.5
+        
+        self.death_cooldown = 1000
+        self.death_time = 0
+        self.lives = 3
 
     def import_character_assets(self):
         character_path = './graphics/character/'
@@ -77,7 +82,7 @@ class Player(pygame.sprite.Sprite):
             self.jump()
             # self.create_jump_particles(self.rect.midbottom)
 
-    def get_status(self):
+    def get_status(self):   
         if self.direction.y < 0:
             self.status = 'germanRunning'
         elif self.direction.y > 1:
