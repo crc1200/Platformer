@@ -57,8 +57,6 @@ class Level:
         player = self.player.sprite
         player.rect.x += player.direction.x * player.speed
 
-        print(player.rect.x)
-
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
                 if player.direction.x < 0:
