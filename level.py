@@ -2,6 +2,10 @@ import pygame
 from tiles import *
 from settings import tile_size, screen_width
 from player import Player
+import random
+from random import *
+
+
 
 class Level:
     def __init__(self, level_data, surface):
@@ -11,7 +15,7 @@ class Level:
         self.setup_level(level_data)
         self.world_shift = 0
         self.current_x = 0
-        self.bg_img = 'assets/mountains.png'
+        self.bg_img = 'assets/trees.png'
 
         # dust
         self.dust_sprite = pygame.sprite.GroupSingle()
@@ -65,7 +69,6 @@ class Level:
         player = self.player.sprite
         player.rect.x += player.direction.x * player.speed
 
-        print(player.rect.x)
         
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
@@ -86,16 +89,18 @@ class Level:
                         self.bg_img = 'assets/trees.png'
                     else:
                         self.bg_img = 'assets/mountains.png';
+                    print(screen_width / tile_size)
                     
-                    player.direction.y = -14
                     
-                    player.flying_speed = -7
-                    player.flying_gravity = 0.2
+                    # player.direction.y = -14
                     
-                    player.speed = -7
-                    player.gravity = 0.2
+                    # player.flying_speed = -7
+                    # player.flying_gravity = 0.2
                     
-                    self.fade(screen_width, screen_width)
+                    # player.speed = -7
+                    # player.gravity = 0.2
+                    
+                    # self.fade(screen_width, screen_width)
                 
                 player.transform_time = pygame.time.get_ticks()
                 
@@ -104,6 +109,14 @@ class Level:
             player.on_left = False
         if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
             player.on_right = False
+
+    def add_obstacles(self):
+        
+        print(randint(1, 11))
+        print(randint(1, 5))
+        
+        tile = Tile((screen_width, 100), tile_size)
+        self.tiles.add(tile)
 
     def vertical_movement_collision(self):
         player = self.player.sprite
