@@ -15,7 +15,7 @@ while True:
     screen.fill((0,0,0))
     screen.blit(bg_img,(i,0))
     screen.blit(bg_img,(screen_width+i,0))
-    if (i==-screen_width):
+    if (i == -screen_width):
         screen.blit(bg_img,(screen_width+i,0))
         i=0
     i-=1

@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.import_character_assets()
         self.frame_index = 0
         self.animation_speed = 0.07
-        self.image = self.animations['germanIdle'][self.frame_index]
+        self.image = self.animations['germanRunning'][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
         self.size = self.image.get_size()
@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = -16
 
         # player status
-        self.status = 'germanIdle'
+        self.status = 'germanRunning'
         self.facing_right = True
         self.on_ground = False
         self.on_ceiling = False
@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
     def import_character_assets(self):
         character_path = './graphics/character/'
         #self.animations = {'wolfIdle': [], 'wolfRun': [], 'jump': [], 'fall': [], 'duck': []}
-        self.animations = {'germanIdle': [], 'germanRunning': [], 'duck': []}
+        self.animations = {'germanIdle': [], 'germanRunning': [],'duck': []}
 
         for animation in self.animations.keys():
             full_path = character_path + animation
@@ -79,7 +79,7 @@ class Player(pygame.sprite.Sprite):
             if self.direction.x != 0:
                 self.status = 'germanRunning'
             else:
-                self.status = 'germanIdle'
+                self.status = 'germanRunning'
         if self.flying:
             self.status = 'duck'
 
