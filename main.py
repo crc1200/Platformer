@@ -4,7 +4,7 @@ from level import *
 from support import *
 
 # Pygame setup
-pygame.init()
+pygame.init() 
 pygame.font.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
