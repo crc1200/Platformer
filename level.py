@@ -17,10 +17,10 @@ class Level:
         self.current_x = 0
         self.bg_img = 'assets/trees.png'
         
-        self.obstacle_cool_down = 500
+        self.obstacle_cool_down = 300
         self.obstacle_time = 0
 
-        self.floor_cool_down = 300
+        self.floor_cool_down = 150
         self.floor_time = 0
         
         self.world_shift_cool_down = 800
@@ -240,6 +240,8 @@ class Level:
             self.obstacle_time = pygame.time.get_ticks()
     #
     def generate_floor(self):
+        if self.player.sprite.flying:
+            return
         if pygame.time.get_ticks() - self.floor_time >= self.floor_cool_down:
             row_indexTop = 7
             row_indexBottom = 8
@@ -324,7 +326,7 @@ class Level:
         # level tiles
         self.add_obstacles()
         self.increase_speed()
-        #self.generate_floor()
+        self.generate_floor()
         
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
