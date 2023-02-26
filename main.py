@@ -28,7 +28,6 @@ def fade(width, height):
             screen.blit(fade, (0, 0))
             pygame.display.update()
             pygame.time.delay(1) 
-    
         scores.append(level.score)
         text_surface = my_font.render("GAME OVER", False, 'white')
         screen.blit(text_surface, (screen_width / 2.8, screen_width / 12))

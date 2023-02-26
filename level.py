@@ -4,13 +4,14 @@ from settings import tile_size, screen_width
 from player import Player
 import random
 from random import *
+from support import *
 
 from support import *
 
 
 class Level:
     def __init__(self, level_data, surface):
-
+        self.t = self.import_terrain()
         # level setup
         self.level_data = level_data
         self.display_surface = surface
@@ -35,11 +36,27 @@ class Level:
         self.death_time = 0
         self.lives = 3
 
+        # images
+
+
     def get_player_on_ground(self):
         if self.player.sprite.on_ground:
             self.player_on_ground = True
         else:
             self.player_on_ground = False
+
+    def import_terrain(self):
+        i = 0
+        terrain_path = './graphics/terrain/'
+        t = {'island1': [], 'island2': [], 'island3': [], 'island4': [], 'doubleLeft': [], 'doubleRight': [], 'regular': [], 'single': [], 'middle': []}
+
+        for tey in t.keys():
+            print(tey)
+            i += 1
+            full_path = terrain_path + tey
+            t[tey] = import_folder(full_path)
+
+        return t
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
@@ -54,7 +71,36 @@ class Level:
                 y = row_index * tile_size
 
                 if cell == 'X':
-                    tile = Tile((x, y), tile_size)
+                    block = self.t['regular']
+                    for i in range(3):
+                        t = randint(0, 2)
+
+                        image = block[t]
+                        size = image.get_size()
+                        image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                        tile = StaticTile(tile_size, x + (i *   tile_size), y, image)
+                        self.tiles.add(tile)
+                        self.tiles.add(tile)
+                if cell == 'Q':
+                    block = self.t['doubleLeft']
+                    image = block[0]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (tile_size), y, image)
+                    self.tiles.add(tile)
+                if cell == 'W':
+                    block = self.t['doubleRight']
+                    image = block[0]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (tile_size), y, image)
+                    self.tiles.add(tile)
+                if cell == 'S':
+                    block = self.t['single']
+                    image = block[0]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (tile_size), y, image)
                     self.tiles.add(tile)
                 if cell == 'P':
                     player_sprite = Player((x, y), self.display_surface)
@@ -62,6 +108,18 @@ class Level:
                 if cell == 'T':
                     tile = Gate((x, y), 10, tile_size)
                     self.gates.add(tile)
+                if cell == 'M':
+                    block = self.t['middle']
+                    for i in range(3):
+                        t = randint(0, 2)
+
+                        image = block[t]
+                        size = image.get_size()
+                        image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                        tile = StaticTile(tile_size, x + (i * tile_size), y, image)
+                        self.tiles.add(tile)
+                        self.tiles.add(tile)
+
 
     def scroll_x(self):
         player = self.player.sprite
@@ -116,17 +174,61 @@ class Level:
 
     def add_obstacles(self):
         if pygame.time.get_ticks() - self.obstacle_time >= self.obstacle_cool_down:
-            
+            inner = pygame.sprite.Group()
             row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
             
             x = screen_width + (col_index * tile_size)
             y = row_index * tile_size
-            test = randint(1, 5)
-            for i in range(test):
-                tile = Tile((x + (i * tile_size), y), tile_size)
-                self.tiles.add(tile)
-            # tile = Tile((screen_width + (i * tile_size), x * 109), tile_size)
+            test = randint(1, 4)
+
+            if test == 1:
+                block = self.t['island1']
+                image = block[0]
+                size = image.get_size()
+                image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                tile = StaticTile(tile_size, x + (tile_size), y, image)
+                collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                if not collide:
+                    inner.add(tile)
+            #
+            elif test == 2:
+                block = self.t['island2']
+
+                for i in range(2):
+                    image = block[i]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (i * tile_size), y, image)
+                    collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                    if not collide:
+                        inner.add(tile)
+
+            elif test == 3:
+                block = self.t['island3']
+                inner = pygame.sprite.Group()
+                for i in range(3):
+                    image = block[2 - i]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (i * tile_size), y, image)
+                    collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                    if not collide:
+                        inner.add(tile)
+
+            elif test == 4:
+                block = self.t['island4']
+                for i in range(4):
+                    image = block[3 - i]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (i * tile_size), y, image)
+                    collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                    if not collide:
+                        inner.add(tile)
+            for i in inner:
+                self.tiles.add(i)
+
             
             self.obstacle_time = pygame.time.get_ticks()
 
