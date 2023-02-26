@@ -13,12 +13,12 @@
 
 level_map = [
 '                                               ',
+'                                      E        ',
 '                                               ',
-'                                               ',
-' QW    S S                                     ',
+' QW    S S               E                     ',
 '    P                                          ',
-'            QW                                 ',
-'                                               ',
+'            QW           E                     ',
+'                                              ',
 ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 ' MMMM  MMMM     M  MMMMMMMMMMMMMMMMMMMMMMMMMMMM',
 ' M  MMMM  MMMMMM   M  MMMMMMMMMMMMMMMMMMMMMMMMM',

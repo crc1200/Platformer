@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.import_character_assets()
         self.frame_index = 0
         self.animation_speed = 0.07
-        self.image = self.animations['germanRunning'][self.frame_index]
+        self.image = self.animations['foxRun'][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
         self.size = self.image.get_size()
@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_speed = -14
 
         # player status
-        self.status = 'germanRunning'
+        self.status = 'foxRun'
         self.facing_right = True
         self.on_ground = False
         self.on_ceiling = False
@@ -47,7 +47,7 @@ class Player(pygame.sprite.Sprite):
 
     def import_character_assets(self):
         character_path = './graphics/character/'
-        self.animations = {'germanIdle': [], 'germanRunning': [],'duck': []}
+        self.animations = {'foxIdle': [], 'foxRun': [],'foxJump':[], 'duck': []}
 
         for animation in self.animations.keys():
             full_path = character_path + animation
@@ -81,14 +81,14 @@ class Player(pygame.sprite.Sprite):
 
     def get_status(self):   
         if self.direction.y < 0:
-            self.status = 'germanRunning'
+            self.status = 'foxJump'
         elif self.direction.y > 1:
-            self.status = 'germanRunning'
+            self.status = 'foxJump'
         else:
             if self.direction.x != 0:
-                self.status = 'germanRunning'
+                self.status = 'foxRun'
             else:
-                self.status = 'germanRunning'
+                self.status = 'foxRun'
         if self.flying:
             self.status = 'duck'
 
@@ -103,15 +103,23 @@ class Player(pygame.sprite.Sprite):
         image = animation[int(self.frame_index)]
 
         if self.flying:
-            image = pygame.transform.scale(image, (int(self.size[0]*.75), int(self.size[1]*.88)))
+            image = pygame.transform.scale(image, (int(self.size[0]*2.75), int(self.size[1]*2.88)))
+            if not self.facing_right:
+                self.image = image
+            else:
+                self.animation_speed = .1
+                flipped_image = pygame.transform.flip(image, True, False)
+                self.image = flipped_image
         else:
-            image = pygame.transform.scale(image, (int(self.size[0]*1.2), int(self.size[1]*1.2)))
-        if not self.facing_right:
-            self.image = image
-        else:
-            self.animation_speed = .1
-            flipped_image = pygame.transform.flip(image, True, False)
-            self.image = flipped_image
+            image = pygame.transform.scale(image, (int(self.size[0]*3), int(self.size[1]*3)))
+            if self.facing_right:
+                self.image = image
+            else:
+                self.animation_speed = .1
+                flipped_image = pygame.transform.flip(image, True, False)
+                self.image = flipped_image
+
+
 
         # set the rect
         if self.on_ground and self.on_right:
