@@ -32,3 +32,5 @@ class StaticTile(OtherTile):
     def __init__(self, size, x, y, surface):
         super().__init__(size, x, y)
         self.image = surface
+    def update(self, x_shift):
+        self.rect.x += x_shift
