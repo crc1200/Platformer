@@ -120,7 +120,6 @@ class Level:
                         self.tiles.add(tile)
                         self.tiles.add(tile)
 
-
     def scroll_x(self):
         player = self.player.sprite
         player_x = player.rect.centerx
@@ -147,6 +146,18 @@ class Level:
 
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
+                if player.flying and pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
+                    self.death_time = pygame.time.get_ticks()
+                    if self.lives:
+                        self.lives -= 1
+                        self.world_shift = 0
+                        player.rect.x = screen_width / 4
+                        player.rect.y = screen_width / 4
+                        
+                        flipped_image = pygame.transform.flip(player.image, True, False)
+                        player.image = flipped_image
+                    else:
+                        print("GAME OVER")
                 if not self.player.sprite.facing_right:
                     player.rect.left = sprite.rect.right
                     player.on_left = True
@@ -251,8 +262,6 @@ class Level:
             player.on_ground = False
         if player.on_ceiling and player.direction.y > 0.1:
             player.on_ceiling = False          
-        
-
 
     def check_game_over(self):
         player = self.player.sprite
