@@ -36,7 +36,7 @@ while True:
     screen.blit(text_surface, (50,30))
     
     lastPosition = 0
-    for i in range(level.lives):
+    for j in range(level.lives):
         screen.blit(heart, (20 + lastPosition, 100))
         lastPosition += 40
         
