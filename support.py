@@ -19,7 +19,6 @@ def import_cut_graphic(path):
     surface = pygame.image.load(path).convert_alpha()
     tile_num_x = int(surface.get_size()[0] / tile_size)
     tile_num_y = int(surface.get_size()[1] / tile_size)
-
     cut_tiles = []
     for row in range(tile_num_y):
         for col in range(tile_num_x):
