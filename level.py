@@ -6,9 +6,6 @@ import random
 from random import *
 from support import *
 
-from support import *
-
-
 class Level:
     def __init__(self, level_data, surface):
         self.t = self.import_terrain()
@@ -26,7 +23,7 @@ class Level:
         self.floor_cool_down = 300
         self.floor_time = 0
         
-        self.world_shift_cool_down = 300
+        self.world_shift_cool_down = 800
         self.world_shift_time = 0
 
         # dust
@@ -38,6 +35,8 @@ class Level:
         self.death_cooldown = 1000
         self.death_time = 0
         self.lives = 3
+        
+        self.time = 0
 
         # images
 
@@ -62,6 +61,9 @@ class Level:
         return t
 
     def setup_level(self, layout):
+        
+        self.time = pygame.time.get_ticks()
+        
         self.tiles = pygame.sprite.Group()
         # create a group of "gates"
         self.gates = pygame.sprite.Group()
@@ -105,6 +107,7 @@ class Level:
                     tile = StaticTile(tile_size, x + (tile_size), y, image)
                     self.tiles.add(tile)
                 if cell == 'P':
+                    print(x, y)
                     player_sprite = Player((x, y), self.display_surface)
                     self.player.add(player_sprite)
                 if cell == 'T':
@@ -135,32 +138,21 @@ class Level:
             player.speed = 8
             
     def increase_speed(self):
-        if pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
-            self.world_shift = -(pygame.time.get_ticks()**(1/7))
-            self.score = int((pygame.time.get_ticks()/1000) + 2**(pygame.time.get_ticks()/10000)) 
+        if pygame.time.get_ticks() - self.world_shift_time >= self.world_shift_cool_down:
+            self.world_shift = -((pygame.time.get_ticks() - self.time)**(1/10))
+            self.score = int(((pygame.time.get_ticks() - self.time) /1000) + 2**((pygame.time.get_ticks() - self.time)/10000)) 
+            self.world_shift_time = pygame.time.get_ticks()
         
     def horizontal_movement_collision(self):
         player = self.player.sprite
         if player.flying:
-            player.rect.x += player.direction.x * (player.speed * 0.5)
+            player.rect.x += player.direction.x * (player.speed * 0.3)
         else:
-            player.rect.x += player.direction.x * (player.speed * 1.3)
+            player.rect.x += player.direction.x * (player.speed * 0.8)
 
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
-                if player.flying and pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
-                    self.death_time = pygame.time.get_ticks()
-                    if self.lives:
-                        self.lives -= 1
-                        self.world_shift = 0
-                        player.rect.x = screen_width / 4
-                        player.rect.y = screen_width / 4
-                        
-                        flipped_image = pygame.transform.flip(player.image, True, False)
-                        player.image = flipped_image
-                    else:
-                        print("GAME OVER")
-                if player.direction.x < 0:
+                if not self.player.sprite.facing_right:
                     player.rect.left = sprite.rect.right
                     player.on_left = True
                     self.current_x = player.rect.left
@@ -318,20 +310,26 @@ class Level:
     def check_game_over(self):
         player = self.player.sprite
         if (player.rect.x < 0 - player.size[0] or player.rect.y > 1200) and pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
-            if self.lives:
-                self.lives -= 1
-                self.world_shift = 0
-                player.rect.x = screen_width / 4
-                player.rect.y = screen_width / 4
-                
-                flipped_image = pygame.transform.flip(player.image, True, False)
-                player.image = flipped_image
-            else:
-                print("GAME OVER")
+            
+            self.lives -= 1
+            self.world_shift = 0
+            
+            player.rect.x = screen_width / 4
+            player.rect.y = screen_width / 4
+            
+            flipped_image = pygame.transform.flip(player.image, True, False)
+            player.image = flipped_image
+            if self.lives == 0:
+                self.time = pygame.time.get_ticks()
             self.death_time = pygame.time.get_ticks()
+    
+    def reset(self):
+        player = self.player.sprite
+        self.score = 0
+        self.setup_level(self.level_data)
+
 
     def run(self):
-
         # level tiles
         self.add_obstacles()
         self.increase_speed()

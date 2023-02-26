@@ -18,16 +18,17 @@ heart = pygame.image.load("assets/heart.png").convert_alpha()
 
 scores = []
 
-def fade(width, height):
+def fade(width, height, i):
         fade = pygame.Surface((width, height))
         fade.fill((0, 0, 0))
         
         for alpha in range(0, 300, 2):
             fade.set_alpha(alpha)
-            redrawWindow()
+            redrawWindow(i)
             screen.blit(fade, (0, 0))
             pygame.display.update()
             pygame.time.delay(1) 
+            
         scores.append(level.score)
         text_surface = my_font.render("GAME OVER", False, 'white')
         screen.blit(text_surface, (screen_width / 2.8, screen_width / 12))
@@ -56,9 +57,7 @@ def fade(width, height):
             lastPosition += 80
             
 
-def redrawWindow():
-    i = 0
-    
+def redrawWindow(i):    
     bg_img = pygame.image.load(level.bg_img)
     bg_img = pygame.transform.scale(bg_img,(screen_width,screen_height))
     
@@ -75,45 +74,55 @@ def redrawWindow():
     level.tiles.draw(level.display_surface)
     level.gates.update(level.world_shift)
 
-i = 0
-while True:
-    if not level.lives:
-        if level.lives == 0:
-            level.lives -= 1
-            fade(screen_width, screen_width)
-    elif level.lives > 0:
-        text_surface = my_font.render(str(level.score), False, 'black')
-        bg_img = pygame.image.load(level.bg_img)
-        bg_img = pygame.transform.scale(bg_img,(screen_width,screen_height))
-        
-        screen.fill((0,0,0))
-        screen.blit(bg_img,(i,0))
-        screen.blit(bg_img,(screen_width+i,0))
-        if (i==-screen_width):
-            screen.blit(bg_img,(screen_width+i,0))
-            i=0
-        i-=1
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+
+def main():
+    i = 0
+    level.lives = 3
+    level.score = 0
+    
+    while True:
+        if level.lives <= 0:
+            break
+        else:
+            text_surface = my_font.render(str(level.score), False, 'black')
+            bg_img = pygame.image.load(level.bg_img)
+            bg_img = pygame.transform.scale(bg_img,(screen_width,screen_height))
             
-        level.run()
-        screen.blit(text_surface, (50,30))
+            screen.fill((0,0,0))
+            screen.blit(bg_img,(i,0))
+            screen.blit(bg_img,(screen_width+i,0))
+            if (i==-screen_width):
+                screen.blit(bg_img,(screen_width+i,0))
+                i=0
+            i-=1
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                
+            level.run()
+            screen.blit(text_surface, (50,30))
+            
+            lastPosition = 0
+            for j in range(level.lives):
+                screen.blit(heart, (20 + lastPosition, 100))
+                lastPosition += 40 
+        pygame.display.update()
+    playAgain(i)
         
-        lastPosition = 0
-        for j in range(level.lives):
-            screen.blit(heart, (20 + lastPosition, 100))
-            lastPosition += 40 
-    else:
+def playAgain(i):
+    fade(screen_width, screen_width, i)
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP:
-                level.lives = 3
-                level.score = -100
-                
-    pygame.display.update()
-    clock.tick(60)
+                level.reset()
+                main()
+        pygame.display.update()
+        clock.tick(60)
+                    
+        
+main()
