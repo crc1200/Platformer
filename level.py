@@ -109,8 +109,6 @@ class Level:
                 
                 player.transform_time = pygame.time.get_ticks()
 
-                
-
         if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
             player.on_left = False
         if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
@@ -118,14 +116,6 @@ class Level:
 
     def add_obstacles(self):
         if pygame.time.get_ticks() - self.obstacle_time >= self.obstacle_cool_down:
-            # numRows = randint(3, 6)
-                    
-            # for j in range(numRows):
-            #     x = randint(1, 11)
-            #     y = randint(3, 5)
-            #     for i in range(y):
-            #         tile = Tile((screen_width + (i * tile_size), x * 109), tile_size)
-            #         self.tiles.add(tile)
             
             row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
@@ -161,28 +151,11 @@ class Level:
             player.on_ceiling = False          
         
 
-    def fade(self, width, height):
-            fade = pygame.Surface((width, height))
-            fade.fill((0, 0, 0))
-            
-            for alpha in range(0, 300):
-                fade.set_alpha(alpha)
-                # self.redrawWindow()
-                self.display_surface.blit(fade, (0, 0))
-                pygame.display.update()
-                pygame.time.delay(1) 
-
-    def redrawWindow(self):
-        self.display_surface.fill((255,255,255))
-        pygame.draw.rect(self.display_surface, (255, 0, 0), (200, 300, 200, 200), 0)
-        pygame.draw.rect(self.display_surface, (0, 255, 0), (200, 300, 200, 200), 0)
 
     def check_game_over(self):
         player = self.player.sprite
         if (player.rect.x < 0 - player.size[0] or player.rect.y > 1200) and pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
             if self.lives:
-                print("CLOSE ONE")
-                print(self.lives)
                 self.lives -= 1
                 self.world_shift = 0
                 player.rect.x = screen_width / 4
