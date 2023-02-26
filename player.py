@@ -72,11 +72,6 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and self.on_ground or keys[pygame.K_SPACE] and self.flying:
             self.jump() 
         
-        
-
-        
-
-        
             # self.create_jump_particles(self.rect.midbottom)
 
     def get_status(self):   
