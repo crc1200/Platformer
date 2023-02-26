@@ -13,15 +13,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         self.size = self.image.get_size()
-        # create a 2x bigger image than self.image
-        #self.image = pygame.transform.scale(self.image, (int(self.size[0]*4), int(self.size[1]*4)))
-        # draw bigger image to screen at x=100 y=100 position
 
         #player movement
         self.direction = pygame.math.Vector2(0, 0)
-        self.speed = 8
-        self.gravity = 0.8
-        self.jump_speed = -18
+        self.speed = 5
+        self.gravity = 0.5
+        self.jump_speed = -14
 
         # player status
         self.status = 'germanRunning'
@@ -36,13 +33,13 @@ class Player(pygame.sprite.Sprite):
         self.transform_time = 0
         
         # dog dash 
-        self.dash_cool_down = 800
+        self.dash_cool_down = 1000
         self.dash_time = 0
 
         # flying
         self.flying = False
-        self.flying_speed = -7
-        self.flying_gravity = 0.5
+        self.flying_speed = -4
+        self.flying_gravity = 0.15
         
         self.death_cooldown = 1000
         self.death_time = 0
@@ -50,7 +47,6 @@ class Player(pygame.sprite.Sprite):
 
     def import_character_assets(self):
         character_path = './graphics/character/'
-        #self.animations = {'wolfIdle': [], 'wolfRun': [], 'jump': [], 'fall': [], 'duck': []}
         self.animations = {'germanIdle': [], 'germanRunning': [],'duck': []}
 
         for animation in self.animations.keys():
@@ -69,14 +65,19 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_LSHIFT]:
             if not self.flying:
                 self.dash()
+        elif keys[pygame.K_RETURN]:
+            self.transform()
         else:
             self.direction.x = 0
-
-        if keys[pygame.K_RETURN]:
-            self.transform()
-
+        
         if keys[pygame.K_SPACE] and self.on_ground or keys[pygame.K_SPACE] and self.flying:
-            self.jump()
+            self.jump() 
+        
+        
+
+        
+
+        
             # self.create_jump_particles(self.rect.midbottom)
 
     def get_status(self):   
@@ -141,7 +142,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = self.jump_speed
     def dash(self):
         if pygame.time.get_ticks() - self.dash_time >= self.dash_cool_down:     
-                self.direction.x += 10           
+                self.direction.x += 10  
                 self.dash_time = pygame.time.get_ticks()
 
     def transform(self):
