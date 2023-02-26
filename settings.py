@@ -13,16 +13,16 @@
 
 level_map = [
 '                                               ',
-'                                      E        ',
 '                                               ',
-' QW    S S               E                     ',
-'    P                                          ',
-'            QW           E                     ',
-'                                              ',
-' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-' MMMM  MMMM     M  MMMMMMMMMMMMMMMMMMMMMMMMMMMM',
-' M  MMMM  MMMMMM   M  MMMMMMMMMMMMMMMMMMMMMMMMM',
-' MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM']
+'                                               ',
+' QW    S S                      C              ',
+'        P                                      ',
+'            QW                                 ',
+'                                               ',
+'XXXXXXXXXXXXXXXXXXXXXXX                       ',
+'MMMMMMMMMMMMMMMMMMMMMMM                       ',
+'MMMMMMMMMMMMMMMMMMMMMMM                       ',
+'MMMMMMMMMMMMMMMMMMMMMMM                       ']
 
 tile_size = 64
 screen_width = 1200

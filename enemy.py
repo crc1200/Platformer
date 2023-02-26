@@ -11,9 +11,9 @@ class Enemy(AnimatedTile):
     def move(self):
         self.rect.x -= self.speed/2
 
-    def reverse_image(self):
-        if self.speed > 0:
-            self.image = pygame.transform.flip(self.image, True, False)
+    # def reverse_image(self):
+    #     if self.speed > 0:
+    #         self.image = pygame.transform.flip(self.image, True, False)
 
     def reverse(self):
         self.speed *= -1
@@ -22,4 +22,4 @@ class Enemy(AnimatedTile):
         self.rect.x += shift
         self.animate()
         self.move()
-        self.reverse_image()
+        # self.reverse_image()

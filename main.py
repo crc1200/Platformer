@@ -16,6 +16,11 @@ my_font = pygame.font.SysFont('assets/pixeboy-font/Pixeboy-z8XGD.ttf', 80)
 
 heart = pygame.image.load("assets/heart.png").convert_alpha()
 
+# audio
+#level_bg_music = pygame.mixer.Sound('./audio/level_music.wav')
+
+
+
 scores = []
 
 def fade(width, height, i):
@@ -76,15 +81,20 @@ def redrawWindow(i):
 
 
 def main():
+    level_bg_music = pygame.mixer.Sound('audio/main.wav')
+    level_bg_music.play(loops=-1)
     i = 0
     level.lives = 3
     level.score = 0
     
     while True:
+        
         if level.lives <= 0:
+            level_bg_music.stop()
             break
+            
         else:
-            text_surface = my_font.render(str(level.score), False, 'black')
+            text_surface = my_font.render(str(level.score), False, 'white')
             bg_img = pygame.image.load(level.bg_img)
             bg_img = pygame.transform.scale(bg_img,(screen_width,screen_height))
             
