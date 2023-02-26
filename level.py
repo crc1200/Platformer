@@ -137,7 +137,7 @@ class Level:
                 if cell == 'M':
                     block = self.t['middle']
                     #for i in range(3):
-                    t = randint(0, 6)
+                    t = randint(1,6)
 
                     image = block[t]
                     size = image.get_size()
@@ -172,7 +172,7 @@ class Level:
     def increase_speed(self):
         if pygame.time.get_ticks() - self.world_shift_time >= self.world_shift_cool_down:
             print("increasing speed")
-            self.world_shift = -((pygame.time.get_ticks() - self.time)**(1/10))
+            self.world_shift = -((pygame.time.get_ticks() - self.time)**(1/5))
             self.score = int(((pygame.time.get_ticks() - self.time) /1000) + 2**((pygame.time.get_ticks() - self.time)/10000)) 
             self.world_shift_time = pygame.time.get_ticks()
             self.decor_cool_down += (pygame.time.get_ticks() - self.time)**(1/10)
@@ -180,9 +180,9 @@ class Level:
     def horizontal_movement_collision(self):
         player = self.player.sprite
         if player.flying:
-            player.rect.x += player.direction.x * (player.speed * 0.3)
+            player.rect.x += (player.direction.x * (player.speed * 0.3))
         else:
-            player.rect.x += player.direction.x * (player.speed * 0.8)
+            player.rect.x += (player.direction.x * (player.speed * 0.8))
 
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(player.rect):
@@ -211,8 +211,11 @@ class Level:
             inner = pygame.sprite.Group()
             # row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
-            row_index = randint(2, 5)
-            col_index = randint(1, 7)
+            if self.player.sprite.flying:
+                row_index = randint(0, 8)
+            else:
+                row_index = randint(2, 6)
+
             
             x = screen_width + (col_index * tile_size)
             y = row_index * tile_size
@@ -310,7 +313,7 @@ class Level:
                 for i in range(1):
                     image = middleTiles[middleInt]
                     size = image.get_size()
-                    image = pygame.transform.scale(image, (int(size[0] * 3), int(size[1] * 3)))
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
                     middleTile = StaticTile(tile_size, x + tile_size, yBottom, image)
                     lower.add(middleTile)
 
@@ -481,16 +484,16 @@ class Level:
         self.power_ups.draw(self.display_surface)
         self.check_power_up_collisions()
 
-        # player
+        # player - toggle for demonstration
         self.player.update()
         self.horizontal_movement_collision()
         self.get_player_on_ground()
         self.vertical_movement_collision()
 
-        # enemy
+        # enemy - Toggle for demonstration
         self.enemy_sprites.update(self.world_shift)
         self.enemy_sprites.draw(self.display_surface)
-        self.check_enemy_collisions()
+        #self.check_enemy_collisions()
         
         self.check_game_over()
         
