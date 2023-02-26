@@ -6,6 +6,8 @@ import random
 from random import *
 from support import *
 
+from support import *
+
 
 class Level:
     def __init__(self, level_data, surface):
@@ -27,6 +29,12 @@ class Level:
         # dust
         self.dust_sprite = pygame.sprite.GroupSingle()
         self.player_on_ground = False
+        
+        self.score = 0
+        
+        self.death_cooldown = 1000
+        self.death_time = 0
+        self.lives = 3
 
         # images
 
@@ -52,7 +60,10 @@ class Level:
 
     def setup_level(self, layout):
         self.tiles = pygame.sprite.Group()
+<<<<<<< HEAD
 
+=======
+>>>>>>> a9323e0d0fe4b7b9766809482506a2ad03a8639c
         # create a group of "gates"
         self.gates = pygame.sprite.Group()
         
@@ -127,7 +138,9 @@ class Level:
             player.speed = 8
             
     def increase_speed(self):
-        self.world_shift = -(pygame.time.get_ticks()**(1/7))
+        if pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
+            self.world_shift = -(pygame.time.get_ticks()**(1/7))
+            self.score = int((pygame.time.get_ticks()/1000) + 2**(pygame.time.get_ticks()/10000)) 
         
     def horizontal_movement_collision(self):
         player = self.player.sprite
@@ -168,7 +181,7 @@ class Level:
     def add_obstacles(self):
         if pygame.time.get_ticks() - self.obstacle_time >= self.obstacle_cool_down:
             
-            row_index = randint(1, len(self.level_data))
+            row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
             
             x = screen_width + (col_index * tile_size)
@@ -255,6 +268,22 @@ class Level:
         pygame.draw.rect(self.display_surface, (255, 0, 0), (200, 300, 200, 200), 0)
         pygame.draw.rect(self.display_surface, (0, 255, 0), (200, 300, 200, 200), 0)
 
+    def check_game_over(self):
+        player = self.player.sprite
+        if (player.rect.x < 0 - player.size[0] or player.rect.y > 1200) and pygame.time.get_ticks() - self.death_time >= self.death_cooldown:
+            if self.lives:
+                print("CLOSE ONE")
+                print(self.lives)
+                self.lives -= 1
+                self.world_shift = 0
+                player.rect.x = screen_width / 4
+                player.rect.y = screen_width / 4
+                
+                flipped_image = pygame.transform.flip(player.image, True, False)
+                player.image = flipped_image
+            else:
+                print("GAME OVER")
+            self.death_time = pygame.time.get_ticks()
 
     def run(self):
 
@@ -275,6 +304,8 @@ class Level:
         self.horizontal_movement_collision()
         self.get_player_on_ground()
         self.vertical_movement_collision()
+        
+        self.check_game_over()
         
     #       self.create_landing_dust()
         self.player.draw(self.display_surface)
