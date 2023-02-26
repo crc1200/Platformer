@@ -27,7 +27,7 @@ class Level:
         self.world_shift_cool_down = 800
         self.world_shift_time = 0
 
-        self.enemy_cooldown = 800
+        self.enemy_cooldown = 1500
         self.enemy_time = 0
 
         # dust
@@ -192,7 +192,8 @@ class Level:
             player.on_right = False
 
     def add_obstacles(self):
-        if pygame.time.get_ticks() - self.enemy_time >= self.enemy_cooldown:
+        if pygame.time.get_ticks() - self.obstacle_time >= self.obstacle_cool_down:
+            inner = pygame.sprite.Group()
             # row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
             row_index = randint(1, 6)
@@ -200,12 +201,56 @@ class Level:
             
             x = screen_width + (col_index * tile_size)
             y = row_index * tile_size
+            test = randint(1, 3)
 
-            sprite = Enemy(tile_size, x, y)
+            if test == 1:
+                image = pygame.image.load('./graphics/mainSingle.png').convert_alpha()
+                size = image.get_size()
+                image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                tile = StaticTile(tile_size, x + (tile_size), y, image)
+                #collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                #if not collide:
+                inner.add(tile)
+            #
+            elif test == 2:
+                right = self.t['doubleLeft']
+                left = self.t['doubleRight']
 
-            self.enemy_sprites.add(sprite)
+                
+               
+                imageRight = right[0]
+                size1 = imageRight.get_size()
+                imageRight = pygame.transform.scale(imageRight, (int(size1[0] * 5), int(size1[1] * 5)))
+                tileRight = StaticTile(tile_size, x , y, imageRight)
+                #collideRight = pygame.sprite.spritecollide(tileRight, self.tiles, True)
+                #if not collideRight:
+                inner.add(tileRight)
+                
+                imageLeft = left[0]
+                size1 = imageLeft.get_size()
+                imageLeft = pygame.transform.scale(imageLeft, (int(size1[0] * 5), int(size1[1] * 5)))
+                tileLeft = StaticTile(tile_size, x + (tile_size), y, imageLeft)
+                #collideLeft = pygame.sprite.spritecollide(tileLeft, self.tiles, True)
+                #if not collideLeft:
+                inner.add(tileLeft)
 
-            self.enemy_time = pygame.time.get_ticks()
+            elif test == 3:
+                block = self.t['island3']
+                inner = pygame.sprite.Group()
+                for i in range(3):
+                    image = block[2 - i]
+                    size = image.get_size()
+                    image = pygame.transform.scale(image, (int(size[0] * 5), int(size[1] * 5)))
+                    tile = StaticTile(tile_size, x + (i * tile_size), y, image)
+                    #collide = pygame.sprite.spritecollide(tile, self.tiles, True)
+                    #if not collide:
+                inner.add(tile)
+
+            for i in inner:
+                self.tiles.add(i)
+
+            
+            self.obstacle_time = pygame.time.get_ticks()
     #
     def generate_floor(self):
         if self.player.sprite.flying:
@@ -314,7 +359,7 @@ class Level:
             self.death_time = pygame.time.get_ticks()
 
     def add_enemies(self):
-        if pygame.time.get_ticks() - self.obstacle_time >= self.obstacle_cool_down:
+        if pygame.time.get_ticks() - self.enemy_time >= self.enemy_cooldown:
             inner = pygame.sprite.Group()
             # row_index = randint(1, len(self.level_data) - 1)
             col_index = randint(1, len(self.level_data[0]))
@@ -323,7 +368,12 @@ class Level:
             
             x = screen_width + (col_index * tile_size)
             y = row_index * tile_size
-            test = randint(1, 3)
+            sprite = Enemy(tile_size, x, y)   
+
+            self.enemy_sprites.add(sprite)
+
+            
+            self.enemy_time = pygame.time.get_ticks()
     
     def reset(self):
         player = self.player.sprite
@@ -334,6 +384,7 @@ class Level:
     def run(self):
         # level tiles
         self.add_obstacles()
+        self.add_enemies()
         self.increase_speed()
         self.generate_floor()
         
